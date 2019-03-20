@@ -1,5 +1,5 @@
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // it create a css file, so it wouldn't be in the js file
+const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // it creates a css file, so it wouldn't be in the js file
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // it collects html so in the html all scripts automatically includes
 const CleanWebpackPlugin = require('clean-webpack-plugin'); //to clean the dist dir so its rewrites every data in that dir
 
@@ -32,6 +32,30 @@ module.exports =(env, { mode }) => {
                         'postcss-loader', 
                         'sass-loader'
                     ]
+                },
+                {
+                    test: /\.pug$/,
+                    use: ['pug-loader']
+                },
+                {
+                    test: /\.(png|svg|jpg|gif)$/,
+                    use: {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 8192 //if the size of the file is less than 8192 the file will be coded into base64 like data:....blah blah
+                        }
+                    }
+                },
+                {
+                    test: /\.(ttf|woff|woff2|eot)$/,
+                    use: [
+                        {
+                            loader: 'url-loader',
+                            options: {
+                                limit: 8192
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -41,7 +65,8 @@ module.exports =(env, { mode }) => {
                 chunkFilename: devMode ? '[id].css' : '[id].[hash].css'
             }),
             new HtmlWebpackPlugin({
-                template: path.resolve('./src/index.html')                
+                template: path.resolve('./src/index.pug'),
+                filename: 'index.html'               
             }),
             new CleanWebpackPlugin()
         ]
