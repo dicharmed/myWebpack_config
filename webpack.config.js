@@ -8,7 +8,7 @@ module.exports =(env, { mode }) => {
     const devMode = mode !== 'production'; //otherwise its always mode development by default
     return {
         entry: {
-            app: path.resolve('./src/index.js')
+            app: path.resolve('./src/main.js')
         },
         output: {
             path: path.resolve(__dirname, 'dist'),
@@ -35,7 +35,14 @@ module.exports =(env, { mode }) => {
                 },
                 {
                     test: /\.pug$/,
-                    use: ['pug-loader']
+                    use: [
+                    {
+                        loader:'pug-loader',
+                        options: {
+                            pretty: true //set offsets and spaces otherwise it'll create inline html
+                        }
+                    }],
+                    
                 },
                 {
                     test: /\.(png|svg|jpg|gif)$/,
@@ -65,7 +72,7 @@ module.exports =(env, { mode }) => {
                 chunkFilename: devMode ? '[id].css' : '[id].[hash].css'
             }),
             new HtmlWebpackPlugin({
-                template: path.resolve('./src/index.pug'),
+                template: path.resolve('./src/pages/index.pug'),
                 filename: 'index.html'               
             }),
             new CleanWebpackPlugin()
